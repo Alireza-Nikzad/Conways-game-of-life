@@ -6,7 +6,16 @@ class App(tk.Tk):
         super().__init__()
         self.geometry("1200x800")
         self.wm_title("Conway's Game of Life")
+        
+        
+
+class GameCanvas(tk.Canvas):
+    def __init__(self, frame):
+        super().__init__(frame, borderwidth=0, highlightthickness=0)
     
+    def draw(self):
+        self.create_rectangle(10, 10, 800, 600, outline='red', fill='blue')
+
 class MainFrame(ttk.Frame):
     def __init__(self, root):
         super().__init__(root)
@@ -26,9 +35,9 @@ class MainFrame(ttk.Frame):
         
         
         
-        canvas = tk.Canvas(self)
-        canvas.create_rectangle(0, 0, 1200, 800, fill='blue')
+        canvas = GameCanvas(self)
         canvas.grid(column=0, row=0, columnspan=2, sticky='NEWS', padx=5, pady=3)
+        canvas.draw()
 
 def main():
     app = App()
