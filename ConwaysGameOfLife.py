@@ -17,23 +17,39 @@ class App(tk.Tk):
         self.mainloop()
         
         
+class Cell:
+    def __init__(self, id):
+        self._id = id
+        
 
 class GameCanvas(tk.Canvas):
     def __init__(self, frame):
         super().__init__(frame, borderwidth=0, highlightthickness=0)
+        
+        self._cells = list()
     
     def draw(self):
         
         cell_size = 57
         cols =self.winfo_width() // cell_size
         rows =self.winfo_height() // cell_size
+        margin_x = (self.winfo_width() % cell_size) / 2
+        margin_y = (self.winfo_height() % cell_size) / 2
         
         for row in range(0, rows):
+            
+            row_list = list()
+            self._cells.append(row_list)
+            
             for col in range(0, cols):
-                x = col * cell_size
-                y = row * cell_size
-                self.create_rectangle(x, y, x + cell_size, y + cell_size, outline='gray', fill='black')
+                x = col * cell_size + margin_x
+                y = row * cell_size + margin_y
                 
+                id = self.create_rectangle(x, y, x + cell_size, y + cell_size, outline='gray', fill='black')
+                row_list.append(Cell(id))
+                
+                
+
 
 class MainFrame(ttk.Frame):
     def __init__(self, root):
