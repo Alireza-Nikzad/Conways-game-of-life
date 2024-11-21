@@ -49,7 +49,17 @@ class GameCanvas(tk.Canvas):
         print(self._get_live_neighbours(2,2))
         
     def _get_live_neighbours(self, row, col):
-        return 0 ; 
+    
+        for rowoffs in range(-1, 2):
+            for coloffs in range(-1, 2):
+                rowpos = row + rowoffs
+                colpos = col + coloffs
+                
+                if rowoffs == 0 and coloffs == 0:
+                    continue
+                
+                cell = self._cells[rowpos][colpos]
+                cell.set_state(True)
     
     def draw(self):
         
