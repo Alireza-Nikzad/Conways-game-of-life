@@ -18,14 +18,33 @@ class App(tk.Tk):
         
         
 class Cell:
+    
+    _canvas = None
+    
+    @classmethod
+    def set_canvas(cls, canvas):
+        Cell._canvas = canvas
+        
+        
+        
     def __init__(self, id):
         self._id = id
+        self._active = False
+        self._canvas.tag_bind(id, "<Button-1>", self._on_click)
+        
+    def _on_click(self, event):
+        self.set_state(not self._active)
+            
+    def set_state(self, state):
+        self._active = state
+        self._canvas.itemconfig(self._id, fill='green' if self._active else 'black')
         
 
 class GameCanvas(tk.Canvas):
     def __init__(self, frame):
         super().__init__(frame, borderwidth=0, highlightthickness=0)
         
+        Cell.set_canvas(self)
         self._cells = list()
     
     def draw(self):
