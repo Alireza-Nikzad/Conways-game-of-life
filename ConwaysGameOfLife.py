@@ -6,9 +6,7 @@ class App(tk.Tk):
         super().__init__()
         self.geometry("1200x800")
         self.wm_title("Conway's Game of Life")
-        
-        
-        
+        self.resizable(False, False)
         self._frame = MainFrame(self)
         
     def run(self):
@@ -46,6 +44,12 @@ class GameCanvas(tk.Canvas):
         
         Cell.set_canvas(self)
         self._cells = list()
+        
+    def next(self):
+        print(self._get_live_neighbours(2,2))
+        
+    def _get_live_neighbours(self, row, col):
+        return 0 ; 
     
     def draw(self):
         
@@ -81,15 +85,17 @@ class MainFrame(ttk.Frame):
         self.rowconfigure(0, weight=2000)
         self.rowconfigure(1, weight=1)
         
-        next_button= ttk.Button(self, text="Step")
+        canvas = GameCanvas(self)
+        canvas.grid(column=0, row=0, columnspan=2, sticky='NEWS', padx=5, pady=3)
+        self._canvas = canvas
+        
+        next_button= ttk.Button(self, text="Step",command=canvas.next)
         next_button.grid(column=0, row=1, sticky=tk.W, padx=5, pady=1)
         
         clear_button= ttk.Button(self, text="Clear")
         clear_button.grid(column=1, row=1, sticky=tk.W, padx=5, pady=1)
         
-        canvas = GameCanvas(self)
-        canvas.grid(column=0, row=0, columnspan=2, sticky='NEWS', padx=5, pady=3)
-        self._canvas = canvas
+        
 
     def update(self):
         self._canvas.draw()
