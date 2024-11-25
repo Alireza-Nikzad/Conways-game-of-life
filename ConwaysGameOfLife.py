@@ -29,6 +29,10 @@ class Cell:
         self._id = id
         self._active = False
         self._canvas.tag_bind(id, "<Button-1>", self._on_click)
+        self._next_state = False
+        
+    def flip(self):
+        self.set_state(self._next_state)
         
     def get_state(self):
         return self._active
@@ -36,6 +40,9 @@ class Cell:
         
     def _on_click(self, event):
         self.set_state(not self._active)
+        
+    def set_next_state(self, state):
+        self._next_state = state
             
     def set_state(self, state):
         self._active = state
@@ -47,12 +54,34 @@ class GameCanvas(tk.Canvas):
         super().__init__(frame, borderwidth=0, highlightthickness=0)
         
         Cell.set_canvas(self)
-        self._cells = list()
+        self._cells = list() 
         self._rows = 0 
         self._cols = 0
         
     def next(self):
-        print(self._get_live_neighbours(4,0))
+        
+        for row in range(0, len(self._cells)):
+            for col in range(0, len(self._cells[row])):
+                cell = self._cells[row][col]
+                live_neighbours = self._get_live_neighbours(row, col)
+                
+                next_state = False 
+                
+                if cell.get_state():
+                    if live_neighbours == 2 or live_neighbours == 3:
+                        next_state = True
+                else:
+                    if live_neighbours == 3 :
+                        next_state = True
+                
+                cell.set_next_state(next_state)
+                
+                
+                
+        for row in self._cells:
+            for cell in row:
+                cell.flip()
+                
         
     def _get_live_neighbours(self, row, col):
     
@@ -73,7 +102,7 @@ class GameCanvas(tk.Canvas):
     
     def draw(self):
         
-        cell_size = 57
+        cell_size = 20
         self._cols =self.winfo_width() // cell_size
         self._rows =self.winfo_height() // cell_size
         margin_x = (self.winfo_width() % cell_size) / 2
