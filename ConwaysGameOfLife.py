@@ -58,6 +58,11 @@ class GameCanvas(tk.Canvas):
         self._rows = 0 
         self._cols = 0
         
+    def clear(self):
+        for row in self._cells:
+            for cell in row:
+                cell.set_state(False)
+        
     def next(self):
         
         for row in range(0, len(self._cells)):
@@ -102,7 +107,7 @@ class GameCanvas(tk.Canvas):
     
     def draw(self):
         
-        cell_size = 20
+        cell_size = 50
         self._cols =self.winfo_width() // cell_size
         self._rows =self.winfo_height() // cell_size
         margin_x = (self.winfo_width() % cell_size) / 2
@@ -141,7 +146,7 @@ class MainFrame(ttk.Frame):
         next_button= ttk.Button(self, text="Step",command=canvas.next)
         next_button.grid(column=0, row=1, sticky=tk.W, padx=5, pady=1)
         
-        clear_button= ttk.Button(self, text="Clear")
+        clear_button= ttk.Button(self, text="Clear", command=canvas.clear)
         clear_button.grid(column=1, row=1, sticky=tk.W, padx=5, pady=1)
         
         
