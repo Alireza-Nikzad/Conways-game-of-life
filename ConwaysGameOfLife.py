@@ -30,6 +30,10 @@ class Cell:
         self._active = False
         self._canvas.tag_bind(id, "<Button-1>", self._on_click)
         
+    def get_state(self):
+        return self._active
+            
+        
     def _on_click(self, event):
         self.set_state(not self._active)
             
@@ -44,37 +48,43 @@ class GameCanvas(tk.Canvas):
         
         Cell.set_canvas(self)
         self._cells = list()
+        self._rows = 0 
+        self._cols = 0
         
     def next(self):
-        print(self._get_live_neighbours(2,2))
+        print(self._get_live_neighbours(4,0))
         
     def _get_live_neighbours(self, row, col):
     
+        count = 0 
+        
         for rowoffs in range(-1, 2):
             for coloffs in range(-1, 2):
-                rowpos = row + rowoffs
-                colpos = col + coloffs
+                rowpos = (row + rowoffs) % self._rows
+                colpos = (col + coloffs) % self._cols
                 
                 if rowoffs == 0 and coloffs == 0:
                     continue
                 
                 cell = self._cells[rowpos][colpos]
-                cell.set_state(True)
+                count += cell.get_state()
+                
+        return count
     
     def draw(self):
         
         cell_size = 57
-        cols =self.winfo_width() // cell_size
-        rows =self.winfo_height() // cell_size
+        self._cols =self.winfo_width() // cell_size
+        self._rows =self.winfo_height() // cell_size
         margin_x = (self.winfo_width() % cell_size) / 2
         margin_y = (self.winfo_height() % cell_size) / 2
         
-        for row in range(0, rows):
+        for row in range(0, self._rows):
             
             row_list = list()
             self._cells.append(row_list)
             
-            for col in range(0, cols):
+            for col in range(0, self._cols):
                 x = col * cell_size + margin_x
                 y = row * cell_size + margin_y
                 
