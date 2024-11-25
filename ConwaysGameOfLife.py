@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-
+import random 
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
@@ -57,6 +57,13 @@ class GameCanvas(tk.Canvas):
         self._cells = list() 
         self._rows = 0 
         self._cols = 0
+        
+    def randomize(self):
+        
+        for _ in range(0,400):
+            row = random.choice(self._cells)
+            cell = random.choice(row)
+            cell.set_state(True)
         
     def clear(self):
         for row in self._cells:
@@ -135,12 +142,13 @@ class MainFrame(ttk.Frame):
         self.pack(fill=tk.BOTH, expand= True, ipadx=0, ipady= 0)
         
         self.columnconfigure(0,weight=1)
-        self.columnconfigure(1,weight=2000)
+        self.columnconfigure(1,weight=1)
+        self.columnconfigure(2,weight=2000)
         self.rowconfigure(0, weight=2000)
         self.rowconfigure(1, weight=1)
         
         canvas = GameCanvas(self)
-        canvas.grid(column=0, row=0, columnspan=2, sticky='NEWS', padx=5, pady=3)
+        canvas.grid(column=0, row=0, columnspan=3, sticky='NEWS', padx=5, pady=3)
         self._canvas = canvas
         
         next_button= ttk.Button(self, text="Step",command=canvas.next)
@@ -149,6 +157,8 @@ class MainFrame(ttk.Frame):
         clear_button= ttk.Button(self, text="Clear", command=canvas.clear)
         clear_button.grid(column=1, row=1, sticky=tk.W, padx=5, pady=1)
         
+        random_button= ttk.Button(self, text="Randomize", command=canvas.randomize)
+        random_button.grid(column=2, row=1, sticky=tk.W, padx=5, pady=1)
         
 
     def update(self):
